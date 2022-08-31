@@ -1,0 +1,8 @@
+clean.csv
+master.csv
+__pycache__/__init__.cpython-37.pyc
+__pycache__/items.cpython-37.pyc
+__pycache__/pipelines.cpython-37.pyc
+__pycache__/settings.cpython-37.pyc
+.DS_Store
+000_master.py
