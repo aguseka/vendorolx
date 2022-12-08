@@ -50,9 +50,7 @@ class Olx2Spider(scrapy.Spider):
     agent_name = "Eka"
 
     def start_requests(self):
-        for (
-            location
-        ) in self.gianyar_klungkung:  # sedang membaca gianyar dan klungkung "bdg_dps"
+        for location in self.bdg_dps:  # sedang membaca badung dan denpasar "bdg_dps"
             for category in self.categories:
 
                 url = (
@@ -114,36 +112,32 @@ class Olx2Spider(scrapy.Spider):
         jlh_lst["user_url"] = user_url
         jlh_lst["total_lst"] = total_listing
         jlh_lst["lst_val"] = lst_val
+        jlh_lst["user_id"] = user_id
         data = scrapy.Request(
-            url=url_listing, callback=self.parse_data, cb_kwargs=jlh_lst,
+            url=url_listing,
+            callback=self.parse_data,
+            cb_kwargs=jlh_lst,
         )
         yield data
 
     # again, the one that is passed is the key of the dictionary
-    def parse_data(self, response, user_url, total_lst, lst_val):
+    def parse_data(self, response, user_url, total_lst, lst_val, user_id):
         all_data = VendorolxItem()
         listing_page = json.loads(response.text)
-        category_id = listing_page["data"]["category_id"]
-        all_data["category_id"] = category_id
-        user_id = listing_page["data"]["user_id"]
-        all_data["user_id"] = user_id
-        title = listing_page["data"]["title"]
-        all_data["title"] = title
+        all_data["category_id"] = listing_page["data"]["category_id"]
+        all_data["user_id"] = listing_page["data"]["user_id"]
+        all_data["title"] = listing_page["data"]["title"]
         all_data["total_listing"] = total_lst
         all_data["lst_val"] = lst_val
-        listing_id = listing_page["data"]["id"]
-        all_data["listing_id"] = listing_id
+        all_data["listing_id"] = listing_page["data"]["id"]
         all_data["user_name"] = listing_page["metadata"]["users"][user_id]["name"]
         all_data["user_url"] = user_url
         all_data["proc_status"] = "just crawled"
         all_data["lst_val"] = listing_page["data"]["price"]["value"]["raw"]
         all_detail = listing_page["data"]["parameters"]
         this_id = {}
-        for (
-            detail
-        ) in (
-            all_detail
-        ):  # extract the detail from dictionary. See the json result to understand this
+        for detail in all_detail:
+            # extract the detail from dictionary. See the json result to understand this
             # put the key/value pair into the dictionary
             this_id[detail["key_name"]] = detail["value_name"]
             # use the function below to get the result

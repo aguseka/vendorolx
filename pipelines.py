@@ -69,13 +69,13 @@ class CreateURLPipeline:
     def process_item(self, item, spider):
         title = item["title"]
         listing_id = item["listing_id"]
-        item["title"] = clean(title, no_punct=True)
-        title = title.replace("-", " ")
-        title = title.replace("|", "")
-        title = title.replace("/", "")
-        title = title.replace(" ", "-")
-        human_url = "https://www.olx.co.id/item/" + title + "-iid-" + listing_id + " "
-        item["human_url"] = human_url
+        #item["title"] = clean(title, no_punct=True)
+        #title = title.replace("-", " ")
+        #title = title.replace("|", "")
+        #title = title.replace("/", "")
+        #title = title.replace(" ", "-")
+        title = "".join([c if c.isalnum() else "" for c in title])
+        item["human_url"] = "https://www.olx.co.id/item/" + title + "-iid-" + listing_id + " "
         return item
 
 
